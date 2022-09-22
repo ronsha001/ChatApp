@@ -1,8 +1,10 @@
-FROM tiangolo/uwsgi-nginx-flask:latest
+FROM python:3.10.4
 
 WORKDIR /app
 
 COPY . .
-RUN pip3 install SQLAlchemy Flask-SQLAlchemy
 
-ENTRYPOINT ["flask", "--app", "index.py", "run"]
+RUN pip3 install -r requirements.txt
+
+ENTRYPOINT ["python3"]
+CMD ["index.py"]
