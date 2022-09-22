@@ -1,0 +1,10 @@
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+
+volumes:
+  db-data:
