@@ -1,12 +1,25 @@
 services:
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-    volumes:
-      - ./database:/docker-entrypoint-initdb.d
-    # healthcheck:
-    #   test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-    #   timeout: 20s
-    #   retries: 10
+  # nginx_service:
+  #   image: nginx
+  #   volumes:
+  #     - './nginx/default.conf:/etc/nginx/nginx.conf'
+
+  app:
+    image: appimg
+    ports:
+      - "5000:5000"
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+
+  # db:
+  #   image: mysql:latest
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: example
+  #   volumes:
+  #     - ./database:/docker-entrypoint-initdb.d
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     timeout: 20s
+  #     retries: 10
 

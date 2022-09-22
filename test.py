@@ -1,25 +1,18 @@
-import json     
-    
-# db_path = 'database/rooms.json'
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
 
-# with open(db_path, 'r') as f:
-#     rooms = json.load(f)
+app = Flask(__name__)
 
-#     print(rooms['room1'])
+app.config["SECRET_KEY"] = "example"
+app.config["SQLALCHEMY_DATABASE_URI"] = "db:3306"
+db = SQLAlchemy(app)
 
-db_path = 'database/rooms.json'
-    
-msg = "new msg\n"
-rooms_data = ''
+def testdb():
+    try:
+        db.session.query(text('1')).from_statement(text('SELECT 1')).all()
+    except Exception as e:
+        print('here')
+        print(e)
 
-with open(db_path, 'r') as f:
-    rooms_data = json.load(f)
-    print(rooms_data['room1'])
-
-with open(db_path, 'w') as f:
-    if ('room2' not in rooms_data):
-        rooms_data['room2'] = []
-
-    rooms_data['room2'].append(msg+"\n")
-    json.dump(rooms_data, f)
-
+testdb()
