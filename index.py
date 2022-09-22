@@ -13,7 +13,7 @@ def general_room():
 def room(room_id):
     return render_template('index.html')
 
-@app.route('/api/chat/general', methods=['GET', 'POST'])
+@app.route('/api/chat/general', methods=['GET', 'POST']) # some dummy text
 def general_chat():
     db_path = 'database/rooms.json'
     room_name = 'general'
