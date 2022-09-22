@@ -1,10 +1,12 @@
 services:
   db:
     image: mysql:latest
-    volumes:
-      - db-data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=123
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    # healthcheck:
+    #   test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+    #   timeout: 20s
+    #   retries: 10
 
-volumes:
-  db-data:
