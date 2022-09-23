@@ -1,7 +1,7 @@
 In this project, there is 2 branches:
 1) local branch - this branch contains ChatApp that works with JSON as its database, this app built for localhost
-                  to execute ChatApp: run the command 'pip install flask', cd to project root directory and run 'Flask --app index.py run'
+                  to execute ChatApp: run the command 'pip install flask', cd to project root directory and run 'bash start.sh'.
 2) deckorized branch - this branch contains ChatApp that works with MySql as its database, this app built for Docker,
-                  to execute ChatApp: cd to project root directory and run 'docker compose up -d'. this will create 2 containers (app container, mysql container)
+                  to execute ChatApp: cd to project root directory and run 'bash start.sh'. this will create 2 containers (app container, mysql container)
 
 NOTE: When executing the deckorized ChatApp, most of the times it will take a few minutes to mysql container to initialize.
