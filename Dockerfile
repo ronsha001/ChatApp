@@ -4,9 +4,12 @@ FROM python:3.10.4
 
 WORKDIR /app
 
-COPY . .
+COPY requirements.txt .
 
 RUN pip3 install -r requirements.txt
 
-ENTRYPOINT ["python3"]
-CMD ["index.py"]
+COPY . .
+
+RUN chmod +x entry-point.sh
+
+ENTRYPOINT ["./entry-point.sh"]
