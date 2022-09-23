@@ -7,7 +7,7 @@ import mysql.connector
 app = Flask(__name__)
 
 connection = mysql.connector.connect(
-    user='root', password='example', port='3306', database='mydb'
+    user='root', password='example', host='db', port='3306', database='mydb'
 )
 print('DB connected')
 cursor = connection.cursor()

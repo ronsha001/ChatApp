@@ -1,12 +1,11 @@
 services:
-  # app:
-  #   restart: on-failure
-  #   build: 
-  #     context: ./
-  #   ports:
-  #     - 5001:5000
-  #   networks:
-  #     - some-net
+  app:
+    restart: on-failure
+    image: pyimg
+    ports:
+      - 5001:5000
+    depends_on:
+      - db
 
   db:
     image: mysql:latest
@@ -20,9 +19,5 @@ services:
       retries: 10
     ports:
       - '3306:3306'
-    # networks:
-    #   - front_some-net
-      
-# networks:
-#   some-net:
-#     driver: bridge
+
+
