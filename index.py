@@ -3,35 +3,27 @@ from flask import Flask
 from flask import request
 from flask import render_template
 import mysql.connector
-import json
-import os
 
 app = Flask(__name__)
 
-
-# connection = mysql.connector.connect(
-#     user='root', password='example', port=f'{db_ip}3306', database='mydb'
-# )
-# print('DB connected')
-
-# cursor = connection.cursor()
-# cursor.execute('SELECT * FROM rooms')
-# rooms = cursor.fetchall()
-# connection.close()
-
-# print(rooms)
+connection = mysql.connector.connect(
+    user='root', password='example', port='3306', database='mydb'
+)
+print('DB connected')
+cursor = connection.cursor()
 
 @app.route("/")
 def general_room():
     return render_template('index.html')
 
+
 @app.route("/<int:room_id>")
 def room(room_id):
     return render_template('index.html')
 
+
 @app.route('/api/chat/general', methods=['GET', 'POST']) # some dummy text
 def general_chat():
-    db_path = 'database/rooms.json'
     room_name = 'general'
     if request.method == 'POST':
         username = request.form['username']
@@ -43,54 +35,45 @@ def general_chat():
         return 'Message added successfully!'
 
     elif request.method == 'GET':
-        rooms_data = get_room_data()
-        if rooms_data and room_name in rooms_data and len(rooms_data[room_name]):
-            return ''.join(rooms_data[room_name])
-        else:
-            return 'There is no messages yet.'
+        chat_list = get_room_data(room_name)
+        return chat_list
 
 
 @app.route('/api/chat/<int:room_id>', methods=['GET', 'POST'])
 def room_chat(room_id):
-    room_name = f"room{room_id}"
     if request.method == 'POST':
         username = request.form['username']
         user_message = request.form['msg']
         if len(username) < 1 or len(user_message) < 1:
             return "Error: username or message is empty."
 
-        handle_post_message(room_name, username, user_message)
+        handle_post_message(room_id, username, user_message)
         return 'Message added successfully!'
 
     elif request.method == 'GET':
-        rooms_data = get_room_data()
-        if rooms_data and room_name in rooms_data and len(rooms_data[room_name]):
-            return ''.join(rooms_data[room_name])
-        else:
-            return 'There is no messages yet.'
+        chat_list = get_room_data(room_id)
+        return chat_list
+
 
 
 def handle_post_message(room_name, username, user_message):
-    db_path = 'database/rooms.json'
-    msg = f"{username}: {user_message}\n"
-
-    rooms_data = get_room_data()
-
-    with open(db_path, 'w') as f:
-        if (room_name not in rooms_data):
-            rooms_data[room_name] = []
-        rooms_data[room_name].append(msg)
-        json.dump(rooms_data, f)
+    sql = f"INSERT INTO rooms (username, msg, room_id) VALUES (%s, %s, %s)"
+    val = (username, user_message, room_name)
+    cursor.execute(sql, val)
+    connection.commit()
 
 
-def get_room_data():
-    db_path = 'database/rooms.json'
-    with open(db_path, 'r') as f:
-        try:
-            rooms_data = json.load(f)
-            return rooms_data
-        except:
-            return {}
+def get_room_data(room_name):
+    cursor.execute(f"SELECT * FROM rooms WHERE room_id='{room_name}'")
+    room_data = cursor.fetchall()
+    chat_list = []
+    for room in room_data:
+        message_format = f"{room[-1]} - {room[0]}: {room[1]}\n"
+        chat_list.append(message_format)
+    if len(chat_list):
+        return ''.join(chat_list)
+    else:
+        return 'There is no messages yet.'
 
 
 if __name__ == '__main__':
