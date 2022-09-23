@@ -1,27 +1,28 @@
 services:
-  app:
-    build:
-      context: ./
+  # app:
+  #   restart: on-failure
+  #   build: 
+  #     context: ./
+  #   ports:
+  #     - 5001:5000
+  #   networks:
+  #     - some-net
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
     ports:
-      - 5000:5000
-
-  # nginx_service:
-  #   image: nginx
-  #   volumes:
-  #     - './nginx/default.conf:/etc/nginx/nginx.conf'
-
-    # depends_on:
-    #   db:
-    #     condition: service_healthy
-
-  # db:
-  #   image: mysql:latest
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: example
-  #   volumes:
-  #     - ./database:/docker-entrypoint-initdb.d
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-  #     timeout: 20s
-  #     retries: 10
-
+      - '3306:3306'
+    # networks:
+    #   - front_some-net
+      
+# networks:
+#   some-net:
+#     driver: bridge

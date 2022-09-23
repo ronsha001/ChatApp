@@ -1,9 +1,25 @@
+from multiprocessing import connection
 from flask import Flask
 from flask import request
 from flask import render_template
-import json     
+import mysql.connector
+import json
+import os
 
 app = Flask(__name__)
+
+
+# connection = mysql.connector.connect(
+#     user='root', password='example', port=f'{db_ip}3306', database='mydb'
+# )
+# print('DB connected')
+
+# cursor = connection.cursor()
+# cursor.execute('SELECT * FROM rooms')
+# rooms = cursor.fetchall()
+# connection.close()
+
+# print(rooms)
 
 @app.route("/")
 def general_room():
